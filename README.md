@@ -2,27 +2,23 @@
 
 **LiShift: Quantifying Libian & Writability from Chu Slips to Han Slips**
 
-> **一句話 / One-liner**
-> 以影像為輸入、以六個可計算指標為核心，量化「篆意→隸化」的字形與筆勢變化，並輸出一個加權綜合分（LQI），服務人文解讀與統計分析。
-> Image in, six metrics out. LiShift measures the glyph & kinematic shifts from pre-Libian (Chu slips) to Han clerical, producing a weighted index (LQI) that bridges computation and humanities.
-
 ---
 
 ## 0. 為何 LiShift？ / Why LiShift?
 
-* **人文問題**：書寫性（writability）如何在「秩序 vs 自由」之間展現？哪些部件、哪些語義域在隸變中改變最大？
-  **Humanities**: How does writability balance order and freedom? Which radicals/semantic fields change most through Libian?
-* **方法難點**：傳統討論多停在例字描述；LiShift 提供**可重複**、**可統計**的量化路徑。
+* **問題**：書寫性（writability）如何在「秩序 vs 自由」之間展現？哪些部件、哪些語義域在隸變中改變最大？
+  **Question**: How does writability balance order and freedom? Which radicals/semantic fields change most through Libian?
+* **方法**：傳統討論多停在例字描述；LiShift 提供**可重複**、**可統計**的量化路徑。
   **Method**: Beyond exemplars—LiShift offers repeatable, statistical measurements.
 
 ---
 
 ## 1. 核心觀念 / Core Ideas
 
-* **隸變不是單純的「換工具」**；它指向一組可觀測的**筆勢—結體—空間**重組：曲→直、連→分、橫勢↑、方整↑、位姿規則化、模板化布局。
-  **Libian ≠ mere tool swap**; it’s a measurable reorganization of stroke dynamics and layout (curves→lines, ligature→discrete strokes, horizontal rhythm, squareness, positional regularity).
-* **同載體對照**：本專案以**簡帛手寫**為主（包山楚簡→張家山/江陵等西漢簡），弱化刻石/拓本的介入，讓量化更貼近「書寫」。
-  **Same medium**: We compare handwritten slips (Chu→Han) to reduce medium bias from stone/ink rubbings.
+* **隸變不是單純的「換工具」**；它指向一組可觀測的筆勢,結體,空間重組：曲=>直、連=>分、橫勢、方整、位姿規則化、模板化布局。
+  **Libian ≠ mere tool swap**; it’s a measurable reorganization of stroke dynamics and layout (curves=>lines, ligature=>discrete strokes, horizontal rhythm, squareness, positional regularity).
+* **同載體對照**：本專案以**手寫简牍**為主（包山楚簡=>張家山/江陵等西漢簡），弱化刻石/拓本的介入，讓量化更貼近「書寫」。
+  **Same medium**: We compare handwritten clips (Chu→Han) to reduce medium bias from stone/ink rubbings.
 
 ---
 
@@ -124,8 +120,8 @@ PY
 
 ## 6. 技術路徑（簡述） / Technical Pipeline (Brief)
 
-* **預處理**：自適應二值化 → 去小連通域 → ±5° 輕微糾偏 → 高度歸一 → 骨架化與去毛刺
-  Adaptive binarization → component filtering → skew fix → scaling → skeleton + spur pruning
+* **預處理**：自適應二值化 => 去小連通域 => ±5° 輕微糾偏 => 高度歸一 => 骨架化與去毛刺
+  Adaptive binarization => component filtering => skew fix => scaling => skeleton + spur pruning
 * **SSI/GCP/SSD**：基於外接框、質心、5×5 網格統計
   Bounding box, center of mass, 5×5 grid stats
 * **STR**：骨架上做 Probabilistic Hough，直線覆蓋率
@@ -137,7 +133,7 @@ PY
 
 ---
 
-## 7. 如何解讀（人文向） / Interpreting the Numbers (Humanities)
+## 7. 如何解讀 / Interpreting the Numbers
 
 * **個字到部件**：先算每字，再按常見部件（氵、扌、忄、辶、刂、阝…）分桶比較 Δ（Han − Chu）。
   From glyphs to radicals: bucket by components and compare Δ.
@@ -145,12 +141,10 @@ PY
   Compare phonetic vs non-phonetic; semantic domains with largest shifts.
 * **文本脈絡**：若能標註**文類/用途**（律令、醫書、告地書），可做分層統計；隸後在公文模板中通常更方整、重心更穩。
   Layer by text genres; clerical documents tend to be squarer and more centered.
-* **一頁結論示例**：
-  「氵系列在 STR/SSI/SSD 上升顯著 → 橫勢與方整度提升，配合行政文書的佈局需要；COI 略降，顯示分筆與節點清晰化。」
 
 ---
 
-## 8. 推薦語料（同域、同載體） / Suggested Corpora (Same Region & Medium)
+## 8. 語料使用（同域、同載體） / Used Corpora (Same Region & Medium)
 
 * **前期（楚）**：包山楚簡（荊門一帶，戰國晚期）
   **Pre-Han**: Baoshan Chu slips (Jingmen region, late Warring States)
@@ -164,9 +158,9 @@ PY
 
 ## 9. 參考書目 / References
 
-* **《漢字構形學導論》**（王寧）：提供**構形單位、層級、平面圖式**與**筆勢化**的理論框架，是 LiShift 指標設計的術語與方法依據。
+* **《漢字構形學導論》**：提供構形單位、層級、平面圖式的理論框架，是 LiShift 指標設計的術語與方法依據。
   *A structural foundation for components, hierarchy, planar schemas, and stroke dynamics—basis for our metrics and terminology.*
-* **《隸變研究》**（學界通用專著）：提供**分期、例字與現象描述**（曲→直、橫勢、方整、波磔等），支撐我們對「隸化方向」的經驗判斷與案例對照。
+* **《隸變研究》**（學界通用專著）：提供分期、例字與現象描述（曲=>直、橫勢、方整、波磔等），支撐我們對「隸化方向」的經驗判斷與案例對照。
   *Empirical staging and exemplars of Libian phenomena that ground our expected trends and case discussions.*
 
 > **建議引用 / Cite LiShift**
