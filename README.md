@@ -34,7 +34,7 @@
 
 2. **GCP 重心居中度 (Global Centering of Mass)** — **0.10**
    前景質心貼近字框中心越高。
-   Foreground COM closer to bbox center ⇒ higher.
+   Foreground COM closer to bbox center => higher.
 
 3. **SSD 空間疏密離散度 (Spatial Sparsity-Dispersion)** — **0.25**
    5×5 網格的像素均衡度；越均衡越高。
@@ -48,7 +48,7 @@
 
 5. **CSI 方折尖銳度 (Corner Sharpness Index)** — **0.15**
    角點更尖、更折則更高。
-   Sharper junctions/turns ⇒ higher.
+   Sharper junctions/turns => higher.
 
 6. **COI 連接／交重複合指數 (Connectivity & Overlap Index)** — **0.15**
    分叉密度與小環/交重；越複雜越高（隸後通常下降或持平）。
@@ -150,6 +150,8 @@ PY
   **Pre-Han**: Baoshan Chu slips (Jingmen region, late Warring States)
 * **後期（漢）**：張家山漢簡（江陵，西漢早期）；江陵鳳凰山漢簡（景帝前後，時間稍晚）
   **Han**: Zhangjiashan slips (early Western Han); Jiangling Fenghuangshan slips (slightly later)
+* **處理結果**：已保存為JSON文件至Results文件夾；數據集過大，未上傳至Github
+  **Processing Results**: Saved as a JSON file to the Results folder；dataset too large to be uploaded to GitHub
 
 > 你也可加入**里耶/岳麓秦簡**作過渡層，形成「楚 → 秦 → 漢」的階梯序列。
 > Optionally add Qin slips (Liyé/Yuelu) as a bridge: Chu → Qin → Han.
