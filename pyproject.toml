@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "libian_metrics"
+version = "0.1.0"
+description = "Python toolkit for quantifying ancient character glyph image quality metrics"
+requires-python = ">=3.10"
+dependencies = [
+    "opencv-python>=4.5.0",
+    "numpy>=1.21.0",
+    "scikit-image>=0.19.0",
+    "scikit-learn>=1.0.0",
+    "joblib>=1.1.0",
+    "pandas>=1.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=3.0",
+]
+
+[project.scripts]
+libian_metrics = "libian_metrics.cli:main"
