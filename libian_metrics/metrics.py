@@ -449,7 +449,11 @@ def compute_all_metrics(
     ssd = ssd_sparsity(bin_img, grid=5, c_cap=calib.get('c_cap', 1.0))
     strr = str_straightness(skel, min_line_len_ratio=0.08, max_line_gap=3)
     csi = csi_corner_sharpness(skel, angle_thresh_deg=calib.get('angle_thresh_deg', 30.0))
-    coi = coi_connectivity_overlap(bin_img, skel, alpha=0.6)
+    coi = coi_connectivity_overlap(
+        bin_img,
+        skel,
+        alpha=calib.get('density_alpha', 0.6),
+    )
     
     # Compute weighted composite score
     lqi = (WEIGHTS['SSI'] * ssi +

@@ -107,13 +107,18 @@ def estimate_skew_angle(bin_img: np.ndarray, angle_range: float = 5.0) -> float:
     return float(dominant_angle)
 
 
-def rotate_bound(img: np.ndarray, angle: float) -> np.ndarray:
+def rotate_bound(
+    img: np.ndarray,
+    angle: float,
+    border_value=None,
+) -> np.ndarray:
     """
     Rotate image by angle and adjust bounds to include full image.
     
     Args:
         img: Input image
         angle: Rotation angle in degrees (positive = counterclockwise)
+        border_value: Optional fill value. Defaults to white for compatibility.
         
     Returns:
         Rotated image with white padding
@@ -135,11 +140,14 @@ def rotate_bound(img: np.ndarray, angle: float) -> np.ndarray:
     rot_mat[0, 2] += (new_w / 2) - center[0]
     rot_mat[1, 2] += (new_h / 2) - center[1]
     
-    # Apply rotation with white padding
+    if border_value is None:
+        border_value = (255, 255, 255) if len(img.shape) == 3 else 255
+
+    # Apply rotation with the requested background value.
     rotated = cv2.warpAffine(
         img, rot_mat, (new_w, new_h),
         borderMode=cv2.BORDER_CONSTANT,
-        borderValue=(255, 255, 255) if len(img.shape) == 3 else 255
+        borderValue=border_value,
     )
     
     return rotated
@@ -171,13 +179,18 @@ def crop_to_content(bin_img: np.ndarray) -> tuple[np.ndarray, tuple[int, int, in
     return cropped, bbox
 
 
-def pad_to_size(img: np.ndarray, target_size: int) -> tuple[np.ndarray, tuple[int, int]]:
+def pad_to_size(
+    img: np.ndarray,
+    target_size: int,
+    border_value=None,
+) -> tuple[np.ndarray, tuple[int, int]]:
     """
     Pad image to square with given size, maintaining aspect ratio.
     
     Args:
         img: Input image
         target_size: Target size (both width and height)
+        border_value: Optional fill value. Defaults to white for compatibility.
         
     Returns:
         (padded_image, (pad_h, pad_w)) - padding applied
@@ -192,17 +205,20 @@ def pad_to_size(img: np.ndarray, target_size: int) -> tuple[np.ndarray, tuple[in
     pad_w_left = pad_w // 2
     pad_w_right = pad_w - pad_w_left
     
+    if border_value is None:
+        border_value = (255, 255, 255) if len(img.shape) == 3 else 255
+
     if len(img.shape) == 2:
         padded = cv2.copyMakeBorder(
             img,
             pad_h_top, pad_h_bot, pad_w_left, pad_w_right,
-            cv2.BORDER_CONSTANT, value=255
+            cv2.BORDER_CONSTANT, value=border_value
         )
     else:
         padded = cv2.copyMakeBorder(
             img,
             pad_h_top, pad_h_bot, pad_w_left, pad_w_right,
-            cv2.BORDER_CONSTANT, value=(255, 255, 255)
+            cv2.BORDER_CONSTANT, value=border_value
         )
     
     return padded, (pad_h, pad_w)

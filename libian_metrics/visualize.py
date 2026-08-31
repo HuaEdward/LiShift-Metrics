@@ -9,6 +9,11 @@ Functions:
 
 import os
 import numpy as np
+import matplotlib
+
+# Visualizations are saved to files by the CLI; a non-interactive backend also
+# makes this reliable in terminals and CI environments.
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from typing import Dict, Tuple, Optional

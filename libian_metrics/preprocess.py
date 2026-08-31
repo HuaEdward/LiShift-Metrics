@@ -70,7 +70,9 @@ def preprocess(
     
     if abs(angle) > 0.5:
         # Apply rotation
-        bin_img = rotate_bound(bin_img, angle)
+        # Binary convention is foreground=255 and background=0, so newly
+        # exposed pixels must be background rather than foreground ink.
+        bin_img = rotate_bound(bin_img, angle, border_value=0)
         # Convert back to binary if needed
         if len(bin_img.shape) == 3:
             bin_img = cv2.cvtColor(bin_img, cv2.COLOR_BGR2GRAY)
@@ -85,7 +87,8 @@ def preprocess(
     if h > 0:
         scale = target_height / h
         new_w = max(1, int(w * scale))
-        bin_img = cv2.resize(bin_img, (new_w, target_height), interpolation=cv2.INTER_LINEAR)
+        # Nearest-neighbor interpolation preserves the 0/255 binary convention.
+        bin_img = cv2.resize(bin_img, (new_w, target_height), interpolation=cv2.INTER_NEAREST)
     else:
         scale = 1.0
     
@@ -93,7 +96,8 @@ def preprocess(
     
     # Step 7: Pad to square (for consistency)
     max_dim = max(bin_img.shape[:2])
-    padded, _ = pad_to_size(bin_img, max_dim)
+    # Keep padding consistent with the binary background convention.
+    padded, _ = pad_to_size(bin_img, max_dim, border_value=0)
     bin_img = padded
     
     # Step 8: Skeletonize
@@ -107,7 +111,8 @@ def preprocess(
     skel_pixels = int(cv2.countNonZero(skel))
     
     quality_flag = True
-    if max_cc < img_area * 0.01:  # Max component < 1% of image area
+    processed_area = bin_img.shape[0] * bin_img.shape[1]
+    if max_cc < processed_area * 0.01:  # Max component < 1% of processed image
         quality_flag = False
     if skel_pixels < 200:  # Too few skeleton pixels
         quality_flag = False

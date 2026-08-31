@@ -14,6 +14,7 @@ setup(
         "scikit-learn>=1.0.0",
         "joblib>=1.1.0",
         "pandas>=1.3.0",
+        "matplotlib>=3.5.0",
     ],
     entry_points={
         "console_scripts": [

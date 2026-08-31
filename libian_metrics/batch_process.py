@@ -67,6 +67,7 @@ def process_character_folder(
     # 处理每张图片
     all_metrics = []
     processed_images = []
+    quality_flags = []
     
     for img_path in sorted(image_files):
         try:
@@ -79,6 +80,7 @@ def process_character_folder(
             metrics = compute_all_metrics(bin_img, skel, calib)
             all_metrics.append(metrics)
             processed_images.append(img_path)
+            quality_flags.append(bool(meta.get('quality_flag', False)))
             
             logger.info(f"✓ Processed: {os.path.basename(img_path)} "
                        f"(LQI={metrics['LQI']:.3f})")
@@ -102,6 +104,10 @@ def process_character_folder(
     
     avg_metrics['char'] = char_name
     avg_metrics['image_count'] = len(processed_images)
+    # Quality counts are additive fields; all successfully processed images
+    # remain included so existing batch behavior and scores are unchanged.
+    avg_metrics['quality_pass_count'] = sum(quality_flags)
+    avg_metrics['quality_fail_count'] = len(quality_flags) - sum(quality_flags)
     
     return avg_metrics, processed_images
 
@@ -196,6 +202,8 @@ def process_dataset_folder(
     }
     
     total_images = 0
+    total_quality_pass = 0
+    total_quality_fail = 0
     lqi_scores = []
     
     for char_name, char_folder in char_folders:
@@ -207,6 +215,8 @@ def process_dataset_folder(
         if avg_metrics:
             results['characters'][char_name] = avg_metrics
             total_images += len(image_paths)
+            total_quality_pass += avg_metrics.get('quality_pass_count', 0)
+            total_quality_fail += avg_metrics.get('quality_fail_count', 0)
             if 'LQI' in avg_metrics:
                 lqi_scores.append(avg_metrics['LQI'])
             
@@ -220,6 +230,8 @@ def process_dataset_folder(
     results['summary'] = {
         'total_characters': len([c for c in results['characters'] if results['characters'][c]]),
         'total_images': total_images,
+        'quality_pass_count': total_quality_pass,
+        'quality_fail_count': total_quality_fail,
         'average_LQI': float(np.mean(lqi_scores)) if lqi_scores else None,
         'lqi_min': float(np.min(lqi_scores)) if lqi_scores else None,
         'lqi_max': float(np.max(lqi_scores)) if lqi_scores else None,
